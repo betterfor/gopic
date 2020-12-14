@@ -2,6 +2,8 @@
 
 [简体中文](https://github.com/owenthereal/goup/blob/master/README_ZH.md)
 
+According to [PicGo](https://github.com/Molunerfinn/PicGo)
+
 **GoPic is a terminal tool for quickly uploading images and getting URL links to images.**
 
  Support Image Gallery:
