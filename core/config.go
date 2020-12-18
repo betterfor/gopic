@@ -1,11 +1,13 @@
 package core
 
-import "encoding/json"
-
-type picturesOpt int
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/betterfor/gopic/core/plugins"
+)
 
 const (
-	Github picturesOpt = iota // github
+	Github = "github"
 	Smms
 	tcyun
 	qiniu
@@ -31,6 +33,34 @@ type Config struct {
 type PicBed struct {
 	Current  string               `json:"current"`  // current use picbed
 	Settings map[string]PicUpload `json:"settings"` // pic bed details
+}
+
+// custom structure
+func (c *Config) UnmarshalJSON(data []byte) error {
+	fmt.Println("unmarshal this")
+	tmp := struct {
+		Uploaded []string
+		Base     Base `json:"base"`
+		Current  string
+		Settings map[string]interface{}
+	}{}
+	err := json.Unmarshal(data, &tmp)
+	if err != nil {
+		return err
+	}
+	fmt.Println("unmarshal success")
+	var sets = make(map[string]PicUpload)
+	for key, settings := range tmp.Settings {
+		switch key {
+		case Github:
+			sets[Github] = settings.(*plugins.GithubOpts)
+		}
+	}
+	o.Settings = sets
+	o.Current = tmp.Current
+	o.Base = tmp.Base
+	o.Uploaded = tmp.Uploaded
+	return nil
 }
 
 type Base struct {

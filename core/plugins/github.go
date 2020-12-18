@@ -48,18 +48,18 @@ func (g *GithubOpts) String() string {
 	return string(bts)
 }
 
+func (g *GithubOpts) Unmarshal(opts []byte) *GithubOpts {
+	var o GithubOpts
+	json.Unmarshal(opts, &o)
+	return &o
+}
+
 // request of github creating or updating file contents
 type githubRequest struct {
 	Message string `json:"message"` // The commit message.
 	Content string `json:"content"` // The new file content, using Base64 encoding.
 	Sha     string `json:"sha"`     // Required if you are updating a file. The blob SHA of the file being replaced.
 	Branch  string `json:"branch"`  // The branch name. Default: the repository’s default branch (usually master)
-	//Committer Committer	`json:"committer"` // The person that committed the file. Default: the authenticated user.
-}
-
-type Committer struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
 }
 
 func (g *githubRequest) String() string {

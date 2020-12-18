@@ -1,6 +1,7 @@
 package config
 
 import (
+	"encoding/json"
 	"github.com/betterfor/gopic/core"
 	"github.com/urfave/cli/v2"
 	"gopkg.in/yaml.v2"
@@ -17,7 +18,6 @@ Save uploading config of image gallery, it can create from yaml config".
 It save config in your $HOME/.gopic/gopic.yaml, 
 if it is not exist, will create file.`,
 	Subcommands: []*cli.Command{list, set},
-	After:       SaveConfig,
 }
 
 var (
@@ -50,6 +50,7 @@ func ParseConfig(c *cli.Context) error {
 		return err
 	}
 	defer file.Close()
+	yaml.Unmarshal()
 	err = yaml.NewDecoder(file).Decode(&cfg)
 	if err != nil {
 		return err
