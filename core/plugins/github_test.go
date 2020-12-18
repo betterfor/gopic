@@ -1,6 +1,7 @@
 package plugins
 
 import (
+	"io/ioutil"
 	"testing"
 )
 
@@ -31,9 +32,21 @@ func TestExampleGithub(t *testing.T) {
 	opts := &GithubOpts{
 		RepoName:  "betterfor/cloudImage",
 		Branch:    "master",
-		Token:     "94558da2dd63b7bf093206ed456cdfc66cac9e04",
-		Path:      "images",
+		Token:     "d190bb2a6b2bd38b0e9763384aac5534315e5f60",
+		Path:      "images/test",
 		CustomURL: "",
 	}
-	opts.Upload()
+
+	t.Log(opts.URL())
+	bts, err := ioutil.ReadFile("./testdata/helloworld.png")
+	if err != nil {
+		t.Fatal(err)
+		return
+	}
+	results, err := opts.Upload("test.png", bts)
+	if err != nil {
+		t.Fatal("upload error:", err)
+		return
+	}
+	t.Log(results)
 }

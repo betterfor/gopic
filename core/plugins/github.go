@@ -1,7 +1,6 @@
 package plugins
 
 import (
-	"crypto/md5"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -25,7 +24,7 @@ type GithubOpts struct {
 }
 
 func (g *GithubOpts) URL() string {
-	baseURL := fmt.Sprintf("https://api.github.com/%s/contents/", g.RepoName)
+	baseURL := fmt.Sprintf("https://api.github.com/repos/%s/contents/", g.RepoName)
 	if len(g.Path) == 0 {
 		return baseURL
 	}
@@ -44,12 +43,23 @@ func (g *GithubOpts) URL() string {
 	return baseURL + g.Path + "/"
 }
 
+func (g *GithubOpts) String() string {
+	bts, _ := json.Marshal(g)
+	return string(bts)
+}
+
 // request of github creating or updating file contents
 type githubRequest struct {
 	Message string `json:"message"` // The commit message.
 	Content string `json:"content"` // The new file content, using Base64 encoding.
 	Sha     string `json:"sha"`     // Required if you are updating a file. The blob SHA of the file being replaced.
 	Branch  string `json:"branch"`  // The branch name. Default: the repository’s default branch (usually master)
+	//Committer Committer	`json:"committer"` // The person that committed the file. Default: the authenticated user.
+}
+
+type Committer struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 func (g *githubRequest) String() string {
@@ -62,14 +72,18 @@ func (g *githubRequest) String() string {
 func (g *GithubOpts) Upload(fileName string, content []byte) (string, error) {
 	// make body
 	now := time.Now()
+
+	ret := base64.StdEncoding.EncodeToString(content)
 	body := githubRequest{
 		Message: fmt.Sprintf("upload file:%s at %s", fileName, now.String()),
-		Content: base64.StdEncoding.EncodeToString(content), // base64
-		Sha:     fmt.Sprintf("%x", md5.Sum(content)),        // md5
-		Branch:  g.Branch,
+		Content: ret, // base64
+		//Sha:     fmt.Sprintf("%x", md5.Sum(content)),        // md5
+		Branch: g.Branch,
 	}
 
-	var client = &http.Client{Timeout: timeout}
+	var client = &http.Client{
+		//Timeout: timeout,
+	}
 
 	req, err := http.NewRequest(http.MethodPut, g.URL()+fileName, strings.NewReader(body.String()))
 	if err != nil {
@@ -77,8 +91,12 @@ func (g *GithubOpts) Upload(fileName string, content []byte) (string, error) {
 	}
 	// set header
 	req.Header.Set("Accept", "application/vnd.github.v3+json")
+	req.Header.Set("Content-Type", "application/json")
 	// set token
-	t := oauth2.Token{AccessToken: g.Token}
+	t := oauth2.Token{
+		AccessToken: g.Token,
+		TokenType:   "token",
+	}
 	t.SetAuthHeader(req)
 
 	resp, err := client.Do(req)
@@ -95,14 +113,8 @@ func (g *GithubOpts) Upload(fileName string, content []byte) (string, error) {
 	case 201:
 		fmt.Println("Updated!")
 		return parseData(resp.Body)
-	case 404:
-		return "", errors.New("Not Found")
-	case 409:
-		return "", errors.New("Conflict")
-	case 422:
-		return "", errors.New("Unprocessable Entity")
 	default:
-		return "", errors.New("Unexpected error")
+		return "", errors.New(resp.Status)
 	}
 }
 
