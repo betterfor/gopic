@@ -30,11 +30,10 @@ func TestURL(t *testing.T) {
 
 func TestExampleGithub(t *testing.T) {
 	opts := &GithubOpts{
-		RepoName:  "betterfor/cloudImage",
-		Branch:    "master",
-		Token:     "d190bb2a6b2bd38b0e9763384aac5534315e5f60",
-		Path:      "images/test",
-		CustomURL: "",
+		RepoName: "betterfor/cloudImage",
+		Branch:   "master",
+		Token:    "xxx",
+		Path:     "images/test",
 	}
 
 	t.Log(opts.URL())
@@ -43,7 +42,7 @@ func TestExampleGithub(t *testing.T) {
 		t.Fatal(err)
 		return
 	}
-	results, err := opts.Upload("test.png", bts)
+	results, err := opts.Upload("test1.png", bts)
 	if err != nil {
 		t.Fatal("upload error:", err)
 		return

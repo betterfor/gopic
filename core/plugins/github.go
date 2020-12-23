@@ -16,11 +16,10 @@ const timeout = time.Second * 10
 
 // github options
 type GithubOpts struct {
-	RepoName  string `json:"repoName"`  // the name of warehouse, like: betterfor/gopic
-	Branch    string `json:"branch"`    // project branch, like: master
-	Token     string `json:"token"`     // set github personal access tokens
-	Path      string `json:"path"`      // storage path in github, support variables ${time-format}
-	CustomURL string `json:"customUrl"` // custom domain name,like: https://xxx.com
+	RepoName string `json:"repoName" yaml:"repoName"` // the name of warehouse, like: betterfor/gopic
+	Branch   string `json:"branch" yaml:"branch"`     // project branch, default is master
+	Token    string `json:"token" yaml:"token"`       // set github personal access tokens
+	Path     string `json:"path" yaml:"path"`         // storage path in github, support variables ${time-format}, default is images
 }
 
 func (g *GithubOpts) URL() string {
@@ -70,9 +69,11 @@ func (g *githubRequest) String() string {
 // https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#create-or-update-file-contents
 // PUT /repos/{owner}/{repo}/contents/{path}
 func (g *GithubOpts) Upload(fileName string, content []byte) (string, error) {
+	if err := g.check(); err != nil {
+		return "", err
+	}
 	// make body
 	now := time.Now()
-
 	ret := base64.StdEncoding.EncodeToString(content)
 	body := githubRequest{
 		Message: fmt.Sprintf("upload file:%s at %s", fileName, now.String()),
@@ -80,9 +81,8 @@ func (g *GithubOpts) Upload(fileName string, content []byte) (string, error) {
 		//Sha:     fmt.Sprintf("%x", md5.Sum(content)),        // md5
 		Branch: g.Branch,
 	}
-
 	var client = &http.Client{
-		//Timeout: timeout,
+		Timeout: timeout,
 	}
 
 	req, err := http.NewRequest(http.MethodPut, g.URL()+fileName, strings.NewReader(body.String()))
@@ -93,12 +93,8 @@ func (g *GithubOpts) Upload(fileName string, content []byte) (string, error) {
 	req.Header.Set("Accept", "application/vnd.github.v3+json")
 	req.Header.Set("Content-Type", "application/json")
 	// set token
-	t := oauth2.Token{
-		AccessToken: g.Token,
-		TokenType:   "token",
-	}
+	t := oauth2.Token{AccessToken: g.Token, TokenType: "token"}
 	t.SetAuthHeader(req)
-
 	resp, err := client.Do(req)
 	if err != nil {
 		return "", err
@@ -116,6 +112,22 @@ func (g *GithubOpts) Upload(fileName string, content []byte) (string, error) {
 	default:
 		return "", errors.New(resp.Status)
 	}
+}
+
+func (g *GithubOpts) check() error {
+	if len(g.RepoName) == 0 {
+		return errors.New("repo name is empty")
+	}
+	if len(g.Branch) == 0 {
+		g.Branch = "master"
+	}
+	if len(g.Path) == 0 {
+		g.Path = "images"
+	}
+	if len(g.Token) == 0 {
+		return errors.New("invalid token")
+	}
+	return nil
 }
 
 func parseData(result io.Reader) (string, error) {
