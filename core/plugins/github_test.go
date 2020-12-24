@@ -14,6 +14,9 @@ func TestURL(t *testing.T) {
 	opts.Path = "images/${2006-01-02}"
 	t.Log(opts.URL())
 
+	opts.Path = "images/${2006/01/02}"
+	t.Log(opts.URL())
+
 	opts.Path = "images/${2006-01-02T15:04:05Z}"
 	t.Log(opts.URL())
 
@@ -37,11 +40,8 @@ func TestExampleGithub(t *testing.T) {
 	}
 
 	t.Log(opts.URL())
-	bts, err := ioutil.ReadFile("./testdata/helloworld.png")
-	if err != nil {
-		t.Fatal(err)
-		return
-	}
+
+	bts, _ := ioutil.ReadFile("./testdata/helloworld.png")
 	results, err := opts.Upload("test1.png", bts)
 	if err != nil {
 		t.Fatal("upload error:", err)

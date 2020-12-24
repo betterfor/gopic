@@ -5,15 +5,21 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/tidwall/gjson"
 	"golang.org/x/oauth2"
-	"io"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
 )
 
-const timeout = time.Second * 10
+const timeout = time.Second * 30
 
+var client = &http.Client{
+	Timeout: timeout,
+}
+
+// https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#create-or-update-file-contents
 // github options
 type GithubOpts struct {
 	RepoName string `json:"repoName" yaml:"repoName"` // the name of warehouse, like: betterfor/gopic
@@ -66,23 +72,19 @@ func (g *githubRequest) String() string {
 	return string(bts)
 }
 
-// https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#create-or-update-file-contents
 // PUT /repos/{owner}/{repo}/contents/{path}
-func (g *GithubOpts) Upload(fileName string, content []byte) (string, error) {
+func (g *GithubOpts) Upload(fileName string, data []byte) (string, error) {
 	if err := g.check(); err != nil {
 		return "", err
 	}
 	// make body
 	now := time.Now()
-	ret := base64.StdEncoding.EncodeToString(content)
+	ret := base64.StdEncoding.EncodeToString(data)
 	body := githubRequest{
 		Message: fmt.Sprintf("upload file:%s at %s", fileName, now.String()),
 		Content: ret, // base64
 		//Sha:     fmt.Sprintf("%x", md5.Sum(content)),        // md5
 		Branch: g.Branch,
-	}
-	var client = &http.Client{
-		Timeout: timeout,
 	}
 
 	req, err := http.NewRequest(http.MethodPut, g.URL()+fileName, strings.NewReader(body.String()))
@@ -103,15 +105,16 @@ func (g *GithubOpts) Upload(fileName string, content []byte) (string, error) {
 
 	// parse result
 	switch resp.StatusCode {
-	case 200:
-		fmt.Println("Created!")
-		return parseData(resp.Body)
-	case 201:
-		fmt.Println("Updated!")
-		return parseData(resp.Body)
+	case http.StatusOK, http.StatusCreated:
+		bts, err := ioutil.ReadAll(resp.Body)
+		return string(bts), err
 	default:
 		return "", errors.New(resp.Status)
 	}
+}
+
+func (g *GithubOpts) Parse(str string) string {
+	return gjson.Get(str, "content.download_url").String()
 }
 
 func (g *GithubOpts) check() error {
@@ -128,13 +131,4 @@ func (g *GithubOpts) check() error {
 		return errors.New("invalid token")
 	}
 	return nil
-}
-
-func parseData(result io.Reader) (string, error) {
-	var m map[string]map[string]interface{}
-	err := json.NewDecoder(result).Decode(&m)
-	if err != nil {
-		return "", err
-	}
-	return m["content"]["download_url"].(string), nil
 }

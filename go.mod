@@ -4,10 +4,9 @@ go 1.14
 
 require (
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/mitchellh/mapstructure v1.1.2
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/viper v1.7.0
-	github.com/urfave/cli/v2 v2.3.0
+	github.com/tidwall/gjson v1.6.5
 	golang.org/x/oauth2 v0.0.0-20201208152858-08078c50e5b5
 	gopkg.in/yaml.v2 v2.2.8
 )
