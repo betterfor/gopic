@@ -32,6 +32,7 @@ func newUploadCmd(out io.Writer) *cobra.Command {
 	f := cmd.Flags()
 	f.BoolVarP(&u.rename, "rename", "r", false, "rename upload file to timestamp")
 	f.StringVarP(&u.kind, "source", "k", "", "select one way to upload")
+	f.StringVarP()
 	return cmd
 }
 

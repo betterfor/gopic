@@ -2,13 +2,13 @@ package core
 
 import (
 	"github.com/betterfor/gopic/core/plugins"
+	"github.com/betterfor/gopic/core/resize"
 	"gopkg.in/yaml.v2"
 )
 
 const (
 	Github = "github"
 	Smms   = "smms"
-	Tcyun
 	Qiniu
 	Imgur
 	Aliyun
@@ -31,7 +31,10 @@ type Config struct {
 }
 
 type Base struct {
-	AutoRename bool // use timestamp rename file
+	AutoRename    bool                // use timestamp rename file
+	CompressType  resize.CompressType // compress kind
+	CompressLimit uint64              // limit size
+	CompressSize  uint64              // compress times
 }
 
 func (c *Config) String() string {
