@@ -26,7 +26,7 @@ func newConfigCmd(out io.Writer) *cobra.Command {
 	f := cmd.Flags()
 	f.BoolVarP(&config.listAll, "list", "a", false, "show all config")
 	f.StringToStringVar(&config.content, "set", nil, "save config")
-	f.StringVar(&config.use, "use", "", "use config")
+	f.StringVar(&config.use, "use", "", "choose config")
 	return cmd
 }
 

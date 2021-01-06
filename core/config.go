@@ -31,10 +31,9 @@ type Config struct {
 }
 
 type Base struct {
-	AutoRename    bool                // use timestamp rename file
-	CompressType  resize.CompressType // compress kind
-	CompressLimit uint64              // limit size
-	CompressSize  uint64              // compress times
+	AutoRename   bool                // use timestamp rename file
+	CompressType resize.CompressType // compress kind
+	CompressSize int                 // compress times
 }
 
 func (c *Config) String() string {
