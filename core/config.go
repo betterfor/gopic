@@ -27,6 +27,7 @@ type Config struct {
 	Base     Base     // base config
 	Current  string   // current use picbed
 	Github   plugins.GithubOpts
+	Gitee    plugins.GiteeOpts
 	Smms     plugins.SmmsOpts
 }
 
