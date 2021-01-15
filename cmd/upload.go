@@ -95,6 +95,8 @@ func uploadKind(cfg *core.Config) core.PicUpload {
 		return &cfg.Github
 	case core.Smms:
 		return &cfg.Smms
+	case core.Gitee:
+		return &cfg.Gitee
 	default:
 		return nil
 	}

@@ -8,6 +8,7 @@ import (
 
 const (
 	Github = "github"
+	Gitee  = "gitee"
 	Smms   = "smms"
 	Qiniu
 	Imgur
