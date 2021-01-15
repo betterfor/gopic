@@ -37,7 +37,10 @@ func (c *configCmd) run() {
 	}
 
 	if len(c.use) != 0 {
-		cfg.Current = c.use
+		//cfg.Current = c.use
+		viper.Set("current", c.use)
+		fmt.Fprintln(c.out, "convert upload target: ", c.use)
+		return
 	}
 	if len(c.content) != 0 {
 		for key, val := range c.content {
