@@ -11,23 +11,23 @@ func TestGiteeURL(t *testing.T) {
 	t.Log(opts.URL())
 
 	// use time format
-	opts.Path = "images/${2006-01-02}"
+	opts.Path = "images/{2006-01-02}"
 	t.Log(opts.URL())
 
-	opts.Path = "images/${2006/01/02}"
+	opts.Path = "images/{2006/01/02}"
 	t.Log(opts.URL())
 
-	opts.Path = "images/${2006-01-02T15:04:05Z}"
+	opts.Path = "images/{2006-01-02T15:04:05Z}"
 	t.Log(opts.URL())
 
-	opts.Path = "images/${2006-01-02 15:04:05}"
+	opts.Path = "images/{2006-01-02 15:04:05}"
 	t.Log(opts.URL())
 
 	// not use time format
-	opts.Path = "images/${2006-01-02"
+	opts.Path = "images/{2006-01-02"
 	t.Log(opts.URL())
 
-	opts.Path = "images/$2006-01-02"
+	opts.Path = "images/2006-01-02"
 	t.Log(opts.URL())
 }
 
@@ -35,7 +35,7 @@ func TestExampleGitee(t *testing.T) {
 	opts := &GiteeOpts{
 		RepoName:    "zongl/cloudImage",
 		Branch:      "master",
-		AccessToken: "baf02e6256e8f2655c101ee2d9a42d47",
+		AccessToken: "xxx",
 		Path:        "images/test",
 	}
 
@@ -48,4 +48,14 @@ func TestExampleGitee(t *testing.T) {
 		return
 	}
 	t.Log(results)
+}
+
+func TestGetToken(t *testing.T) {
+	opts := &GiteeOpts{
+		Email:        "xxx@qq.com",
+		Password:     "xxx",
+		ClientID:     "xxx",
+		ClientSecret: "xxx",
+	}
+	opts.getToken()
 }

@@ -44,6 +44,7 @@ func (c *configCmd) run() {
 	}
 	if len(c.content) != 0 {
 		for key, val := range c.content {
+			fmt.Println(key, val)
 			viper.Set(key, val)
 		}
 	}

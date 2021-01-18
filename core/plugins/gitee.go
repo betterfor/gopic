@@ -1,23 +1,30 @@
 package plugins
 
 import (
+	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
 
 // https://gitee.com/api/v5/swagger#/postV5ReposOwnerRepoContentsPath
 type GiteeOpts struct {
-	RepoName    string `json:"repoName" yaml:"repoName"`
-	Branch      string `json:"branch" yaml:"branch"`
-	Path        string `json:"path" yaml:"path"`
-	AccessToken string `json:"accessToken" yaml:"accessToken"`
+	RepoName     string `json:"repoName" yaml:"repoName"`
+	Branch       string `json:"branch" yaml:"branch"`
+	Path         string `json:"path" yaml:"path"`
+	Email        string `json:"email" yaml:"email"`
+	Password     string `json:"password" yaml:"password"`
+	ClientID     string `json:"clientId" yaml:"clientId"`
+	ClientSecret string `json:"clientSecret" yaml:"clientSecret"`
+	AccessToken  string `json:"accessToken" yaml:"accessToken"`
 }
 
 func (g *GiteeOpts) URL() string {
@@ -27,11 +34,11 @@ func (g *GiteeOpts) URL() string {
 	}
 	// check if the path contains variables
 	for {
-		t0 := strings.Index(g.Path, "${")
+		t0 := strings.Index(g.Path, "{")
 		t1 := strings.Index(g.Path, "}")
 		if t1-t0 > 0 {
 			now := time.Now()
-			g.Path = strings.Replace(g.Path, g.Path[t0:t1+1], now.Format(g.Path[t0+2:t1]), 1)
+			g.Path = strings.Replace(g.Path, g.Path[t0:t1+1], now.Format(g.Path[t0+1:t1]), 1)
 		} else {
 			break
 		}
@@ -55,14 +62,25 @@ func (g *giteeRequest) String() string {
 
 // POST https://gitee.com/api/v5/repos/{owner}/{repo}/contents/{path}
 func (g *GiteeOpts) Upload(fileName string, data []byte) (string, error) {
-	if err := g.check(); err != nil {
+	err := g.check()
+	if err != nil {
 		return "", err
 	}
 	// make body
 	now := time.Now()
 	ret := base64.StdEncoding.EncodeToString(data)
+
+	var token string
+	if len(g.AccessToken) != 0 {
+		token, err = g.getToken()
+		if err != nil {
+			return "", err
+		}
+	} else {
+		token = g.AccessToken
+	}
 	body := giteeRequest{
-		AccessToken: g.AccessToken,
+		AccessToken: token,
 		Message:     fmt.Sprintf("upload file:%s at %s", fileName, now.String()),
 		Content:     ret, // base64
 		//Sha:     fmt.Sprintf("%x", md5.Sum(content)),        // md5
@@ -86,9 +104,14 @@ func (g *GiteeOpts) Upload(fileName string, data []byte) (string, error) {
 	case http.StatusOK, http.StatusCreated:
 		bts, err := ioutil.ReadAll(resp.Body)
 		return string(bts), err
-	default:
-		return "", errors.New(resp.Status)
+	case http.StatusUnauthorized:
+		token, err = g.getToken()
+		if err != nil {
+			return "", err
+		}
+		viper.Set("gitee.accessToken", token)
 	}
+	return "", errors.New(resp.Status)
 }
 
 func (g *GiteeOpts) Parse(str string) string {
@@ -109,4 +132,40 @@ func (g *GiteeOpts) check() error {
 		return errors.New("invalid token")
 	}
 	return nil
+}
+
+type TokenResponse struct {
+	AccessToken  string `json:"access_token"`
+	TokenType    string `json:"token_type"`
+	ExpiresIn    int64  `json:"expires_in"`
+	RefreshToken string `json:"refresh_token"`
+	Scope        string `json:"scope"`
+	CreatedAt    int64  `json:"created_at"`
+}
+
+func (g *GiteeOpts) getToken() (string, error) {
+	var m = map[string]string{
+		"grant_type":    "password",
+		"username":      g.Email,
+		"password":      g.Password,
+		"client_id":     g.ClientID,     // 06a09ac9908bc456f8cacda14c23b1f224d5da8242a68767eea469035236feb1
+		"client_secret": g.ClientSecret, // f45de22601eda67155d0e1dd28b5be9ace5db391907bc21da41b7db79532fbad
+		"scope":         "projects",
+	}
+	v := url.Values{}
+	for key, val := range m {
+		v.Add(key, val)
+	}
+	resp, err := http.Post("https://gitee.com/oauth/token", "application/x-www-form-urlencoded", bytes.NewBufferString(v.Encode()))
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	var result TokenResponse
+	err = json.NewDecoder(resp.Body).Decode(&result)
+	if err != nil {
+		return "", err
+	}
+	return result.AccessToken, nil
 }
