@@ -68,10 +68,12 @@ func initConfig() {
 		}
 
 		// Search config in home directory with name "config" (without extension).
-		viper.AddConfigPath(home + "/.gopic")
+		viper.AddConfigPath(home + "/.betterfor/gopic")
 		viper.SetConfigName("config")
 		viper.SetConfigType("yaml")
-		cfgFile = filepath.Join(home, ".gopic", "config.yaml")
+		cfgPath := filepath.Join(home, ".betterfor", "gopic")
+		os.MkdirAll(cfgPath, os.ModeDir)
+		cfgFile = filepath.Join(cfgPath, "config.yaml")
 	}
 
 	if _, err := os.Stat(cfgFile); err != nil {
