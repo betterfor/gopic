@@ -2,7 +2,7 @@
  *Created by XieJian on 2020/12/24 14:08
  *@Desc:
  */
-package plugins
+package cloud
 
 import (
 	"io/ioutil"

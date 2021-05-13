@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/betterfor/gopic/core/plugins"
+	"github.com/betterfor/gopic/core/plugins/cloud"
 	"github.com/betterfor/gopic/core/resize"
 	"gopkg.in/yaml.v2"
 )
@@ -27,9 +27,9 @@ type Config struct {
 	Uploaded []string // uploaded pictures
 	Base     Base     // base config
 	Current  string   // current use picbed
-	Github   plugins.GithubOpts
-	Gitee    plugins.GiteeOpts
-	Smms     plugins.SmmsOpts
+	Github   cloud.GithubOpts
+	Gitee    cloud.GiteeOpts
+	Smms     cloud.SmmsOpts
 }
 
 type Base struct {

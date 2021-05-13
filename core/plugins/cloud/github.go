@@ -1,4 +1,4 @@
-package plugins
+package cloud
 
 import (
 	"encoding/base64"
@@ -35,7 +35,7 @@ func (g *GithubOpts) URL() string {
 	}
 	// check if the path contains variables
 	for {
-		t0 := strings.Index(g.Path, "${")
+		t0 := strings.Index(g.Path, "{")
 		t1 := strings.Index(g.Path, "}")
 		if t1-t0 > 0 {
 			now := time.Now()

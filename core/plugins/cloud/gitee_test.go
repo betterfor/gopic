@@ -1,4 +1,4 @@
-package plugins
+package cloud
 
 import (
 	"io/ioutil"

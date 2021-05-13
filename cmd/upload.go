@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/betterfor/gopic/core"
+	"github.com/betterfor/gopic/core/plugins/cdn"
 	"github.com/betterfor/gopic/core/resize"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -18,6 +19,7 @@ type upload struct {
 	kind         string
 	compress     string
 	compressSize int
+	cdn          string
 }
 
 func newUploadCmd(out io.Writer) *cobra.Command {
@@ -37,6 +39,7 @@ func newUploadCmd(out io.Writer) *cobra.Command {
 	f.StringVarP(&u.kind, "source", "k", "", "select one way to upload")
 	f.StringVarP(&u.compress, "compress", "c", string(cfg.Base.CompressType), "choose one compress type to use")
 	f.IntVarP(&u.compressSize, "size", "s", cfg.Base.CompressSize, "must use --compress before")
+	f.StringVar(&u.cdn, "cdn", "", "use cdn prefix replace url")
 	return cmd
 }
 
@@ -82,8 +85,19 @@ func (u *upload) run(file string) {
 	if debug {
 		fmt.Fprintf(u.out, "consume:%v, upload file response %s\n", time.Since(now).String(), result)
 	}
-	url := opts.Parse(result)
-	fmt.Fprintln(u.out, url)
+	var url string
+	url = opts.Parse(result)
+	switch {
+	case len(u.cdn) != 0 && cfg.Current == "github":
+		c, err := cdn.NewCDN(u.cdn)
+		if err != nil {
+			return
+		}
+		url = c.Convert(url)
+		fmt.Fprintln(u.out, url)
+	default:
+		fmt.Fprintln(u.out, url)
+	}
 
 	ret := viper.GetStringSlice("uploaded")
 	viper.Set("uploaded", append(ret, url))
