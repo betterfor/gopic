@@ -22,10 +22,12 @@ Download and install
 go get -u github.com/betterfor/gopic
 ```
 
-## 支持typora上传
+## support typora upload
 
-with typora settings, File->Preferences->Image->Image Upload Setting->Image Uploader select **Custom Comman**,**
-Command** file in `gopic upload`，test **Test Uploader**
+with typora settings
+
+File->Preferences->Image->Image Upload Setting->Image Uploader select **Custom Comman**,
+**Command** file in `gopic upload`，test **Test Uploader**
 
 ## LICENSE
 
