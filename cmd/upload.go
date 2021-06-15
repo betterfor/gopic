@@ -47,7 +47,11 @@ func (u *upload) run(file string) {
 	var err error
 	now := time.Now()
 	if len(u.kind) != 0 {
-		cfg.Current = core.GopicType(u.kind)
+		curr := core.ConvertType(u.kind)
+		if curr == core.Unknown {
+			fmt.Fprintf(u.out, "unknown kind of %s\n", u.kind)
+		}
+		curr = cfg.Current
 	}
 	opts := uploadKind(cfg)
 
