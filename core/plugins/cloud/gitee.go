@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-// https://gitee.com/api/v5/swagger#/postV5ReposOwnerRepoContentsPath
+// api: https://gitee.com/api/v5/swagger#/postV5ReposOwnerRepoContentsPath
 type GiteeOpts struct {
 	RepoName     string `json:"repoName" yaml:"repoName"`
 	Branch       string `json:"branch" yaml:"branch"`
@@ -148,8 +148,8 @@ func (g *GiteeOpts) getToken() (string, error) {
 		"grant_type":    "password",
 		"username":      g.Email,
 		"password":      g.Password,
-		"client_id":     g.ClientID,     // 06a09ac9908bc456f8cacda14c23b1f224d5da8242a68767eea469035236feb1
-		"client_secret": g.ClientSecret, // f45de22601eda67155d0e1dd28b5be9ace5db391907bc21da41b7db79532fbad
+		"client_id":     g.ClientID,
+		"client_secret": g.ClientSecret,
 		"scope":         "projects",
 	}
 	v := url.Values{}

@@ -38,8 +38,8 @@ func newUploadCmd(out io.Writer) *cobra.Command {
 	f.BoolVarP(&u.rename, "rename", "r", false, "rename upload file to timestamp")
 	f.StringVarP(&u.kind, "source", "k", "", "select one way to upload")
 	f.StringVarP(&u.compress, "compress", "c", string(cfg.Base.CompressType), "choose one compress type to use")
-	f.IntVarP(&u.compressSize, "size", "s", cfg.Base.CompressSize, "must use --compress before")
-	f.StringVar(&u.cdn, "cdn", "", "use cdn prefix replace url")
+	f.IntVarP(&u.compressSize, "size", "s", cfg.Base.CompressLevel, "must use --compress before")
+	f.StringVar(&u.cdn, "cdn", "", "use cdn prefix replace url. example list: [jsdelivr]")
 	return cmd
 }
 
@@ -47,7 +47,7 @@ func (u *upload) run(file string) {
 	var err error
 	now := time.Now()
 	if len(u.kind) != 0 {
-		cfg.Current = u.kind
+		cfg.Current = core.GopicType(u.kind)
 	}
 	opts := uploadKind(cfg)
 

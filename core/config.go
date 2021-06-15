@@ -6,14 +6,16 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+type GopicType string
+
 const (
-	Github = "github"
-	Gitee  = "gitee"
-	Smms   = "smms"
-	Qiniu
-	Imgur
-	Aliyun
-	Upyun
+	Github GopicType = "github"
+	Gitee  GopicType = "gitee"
+	Smms   GopicType = "smms"
+	Qiniu  GopicType = "qiniu"
+	Imgur  GopicType = "imgur"
+	Aliyun GopicType = "aliyun"
+	Upyun  GopicType = "upyun"
 )
 
 // 上传图片接口
@@ -22,20 +24,20 @@ type PicUpload interface {
 	Parse(str string) string
 }
 
-// GOPIC config
+// Config is gopic config
 type Config struct {
-	Uploaded []string // uploaded pictures
-	Base     Base     // base config
-	Current  string   // current use picbed
+	Uploaded []string   // uploaded pictures
+	Base     BaseConfig // base config
+	Current  GopicType  // current use picbed
 	Github   cloud.GithubOpts
 	Gitee    cloud.GiteeOpts
 	Smms     cloud.SmmsOpts
 }
 
-type Base struct {
-	AutoRename   bool                // use timestamp rename file
-	CompressType resize.CompressType // compress kind
-	CompressSize int                 // compress times
+type BaseConfig struct {
+	AutoRename    bool                // use timestamp name replace file name
+	CompressType  resize.CompressType // compress kind
+	CompressLevel int                 // compress level
 }
 
 func (c *Config) String() string {

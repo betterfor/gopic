@@ -9,6 +9,7 @@ const (
 	Jsdelivr = "jsdelivr"
 )
 
+// CDN is fast way to request img
 type CDN interface {
 	Convert(url string) string
 }

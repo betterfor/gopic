@@ -11,23 +11,23 @@ func TestURL(t *testing.T) {
 	t.Log(opts.URL())
 
 	// use time format
-	opts.Path = "images/${2006-01-02}"
+	opts.Path = "images/{2006-01-02}"
 	t.Log(opts.URL())
 
-	opts.Path = "images/${2006/01/02}"
+	opts.Path = "images/{2006/01/02}"
 	t.Log(opts.URL())
 
-	opts.Path = "images/${2006-01-02T15:04:05Z}"
+	opts.Path = "images/{2006-01-02T15:04:05Z}"
 	t.Log(opts.URL())
 
-	opts.Path = "images/${2006-01-02 15:04:05}"
+	opts.Path = "images/{2006-01-02 15:04:05}"
 	t.Log(opts.URL())
 
 	// not use time format
-	opts.Path = "images/${2006-01-02"
+	opts.Path = "images/{2006-01-02"
 	t.Log(opts.URL())
 
-	opts.Path = "images/$2006-01-02"
+	opts.Path = "images/2006-01-02"
 	t.Log(opts.URL())
 }
 

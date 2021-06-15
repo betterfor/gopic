@@ -39,7 +39,7 @@ func (g *GithubOpts) URL() string {
 		t1 := strings.Index(g.Path, "}")
 		if t1-t0 > 0 {
 			now := time.Now()
-			g.Path = strings.Replace(g.Path, g.Path[t0:t1+1], now.Format(g.Path[t0+2:t1]), 1)
+			g.Path = strings.Replace(g.Path, g.Path[t0:t1+1], now.Format(g.Path[t0+1:t1]), 1)
 		} else {
 			break
 		}
@@ -121,14 +121,14 @@ func (g *GithubOpts) check() error {
 	if len(g.RepoName) == 0 {
 		return errors.New("repo name is empty")
 	}
+	if len(g.Token) == 0 {
+		return errors.New("invalid token")
+	}
 	if len(g.Branch) == 0 {
 		g.Branch = "master"
 	}
 	if len(g.Path) == 0 {
 		g.Path = "images"
-	}
-	if len(g.Token) == 0 {
-		return errors.New("invalid token")
 	}
 	return nil
 }

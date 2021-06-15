@@ -77,6 +77,7 @@ func initConfig() {
 	}
 
 	if _, err := os.Stat(cfgFile); err != nil {
+		// If cfgFile not exist, create file and write default config.
 		ioutil.WriteFile(cfgFile, []byte(cfg.String()), os.ModePerm)
 	}
 
