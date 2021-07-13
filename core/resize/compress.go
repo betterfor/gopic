@@ -1,7 +1,3 @@
-/**
- *Created by XieJian on 2020/12/24 16:04
- *@Desc:
- */
 package resize
 
 import (
@@ -13,6 +9,7 @@ import (
 	"image/gif"
 	"image/jpeg"
 	"image/png"
+	"io"
 	"os"
 	"path/filepath"
 )
@@ -25,7 +22,7 @@ const (
 	CompressCustom              = "custom"
 )
 
-func Compress(t CompressType, base int, file string) ([]byte, error) {
+func Compress(t CompressType, base int, file string) (io.Reader, error) {
 	size, img, err := getReadSizeFile(file)
 	if err != nil {
 		return nil, err
@@ -49,7 +46,7 @@ func Compress(t CompressType, base int, file string) ([]byte, error) {
 	var buf = bytes.NewBuffer(nil)
 	img = resize.Thumbnail(uint(x), uint(y), img, resize.Lanczos3)
 	err = jpeg.Encode(buf, img, nil)
-	return buf.Bytes(), err
+	return buf, err
 }
 
 func getReadSizeFile(file string) (size int, img image.Image, err error) {

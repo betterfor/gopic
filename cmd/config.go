@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/betterfor/gopic/core"
+	"github.com/betterfor/gopic/core/plugins/uploader"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"io"
@@ -75,12 +75,12 @@ func useConfigCmd(out io.Writer) *cobra.Command {
 			if len(args) < 1 {
 				return fmt.Errorf("cannot known what kind of uploader use")
 			}
-			curr := core.ConvertType(args[0])
-			if curr == core.Unknown {
+			curr := uploader.Convert(args[0])
+			if curr == uploader.Unknown {
 				return fmt.Errorf("unknown kind of %s", args[0])
 			}
 			viper.Set("current", curr)
-			fmt.Fprintln(out, "convert upload target: ", curr)
+			fmt.Fprintln(out, "current upload target: ", curr)
 			return nil
 		},
 	}
@@ -89,8 +89,8 @@ func useConfigCmd(out io.Writer) *cobra.Command {
 
 func setConfigCmd(out io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list",
-		Short: "config list",
+		Use:   "set",
+		Short: "config set",
 		Run: func(cmd *cobra.Command, args []string) {
 			for _, arg := range args {
 				keys := strings.Split(arg, "=")

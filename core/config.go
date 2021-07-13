@@ -1,38 +1,18 @@
 package core
 
 import (
-	"github.com/betterfor/gopic/core/plugins/cloud"
+	"github.com/betterfor/gopic/core/plugins/uploader"
 	"github.com/betterfor/gopic/core/resize"
+	"github.com/mitchellh/mapstructure"
 	"gopkg.in/yaml.v2"
 )
 
-type GopicType string
-
-const (
-	Unknown GopicType = "unknown"
-	Github  GopicType = "github"
-	Gitee   GopicType = "gitee"
-	Smms    GopicType = "smms"
-	Qiniu   GopicType = "qiniu"
-	Imgur   GopicType = "imgur"
-	Aliyun  GopicType = "aliyun"
-	Upyun   GopicType = "upyun"
-)
-
-// 上传图片接口
-type PicUpload interface {
-	Upload(fileName string, data []byte) (string, error)
-	Parse(str string) string
-}
-
 // Config is gopic config
 type Config struct {
-	Uploaded []string   // uploaded pictures
-	Base     BaseConfig // base config
-	Current  GopicType  // current use picbed
-	Github   cloud.GithubOpts
-	Gitee    cloud.GiteeOpts
-	Smms     cloud.SmmsOpts
+	Uploaded []string           // uploaded pictures
+	Base     BaseConfig         // base config
+	Current  uploader.GopicType // current use picbed
+	Data     map[uploader.GopicType]interface{}
 }
 
 type BaseConfig struct {
@@ -46,23 +26,41 @@ func (c *Config) String() string {
 	return string(bts)
 }
 
-func ConvertType(v string) GopicType {
-	switch v {
-	case "github":
-		return Github
-	case "gitee":
-		return Gitee
-	case "smms":
-		return Smms
-	case "qiniu":
-		return Qiniu
-	case "imgur":
-		return Imgur
-	case "aliyun":
-		return Aliyun
-	case "upyun":
-		return Upyun
-	default:
-		return Unknown
+func (c *Config) Use() uploader.Uploader {
+	data := c.Data[c.Current]
+	switch c.Current {
+	case uploader.Github:
+		var c uploader.GithubConfig
+		mapstructure.Decode(data, &c)
+		return &c
+	case uploader.Gitee:
+		var c uploader.GiteeConfig
+		mapstructure.Decode(data, &c)
+		return &c
+	case uploader.Smms:
+		var c uploader.SmmsConfig
+		mapstructure.Decode(data, &c)
+		return &c
+	case uploader.Qiniu:
+		var c uploader.QiniuConfig
+		mapstructure.Decode(data, &c)
+		return &c
+	case uploader.Imgur:
+		var c uploader.ImgurConfig
+		mapstructure.Decode(data, &c)
+		return &c
+	case uploader.Aliyun:
+		var c uploader.AliyunConfig
+		mapstructure.Decode(data, &c)
+		return &c
+	case uploader.Upyun:
+		var c uploader.UpyunConfig
+		mapstructure.Decode(data, &c)
+		return &c
+	case uploader.Tcyun:
+		var c uploader.TcyunConfig
+		mapstructure.Decode(data, &c)
+		return &c
 	}
+	return nil
 }

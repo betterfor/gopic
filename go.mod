@@ -4,8 +4,10 @@ go 1.14
 
 require (
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/mitchellh/mapstructure v1.1.2
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/pkg/errors v0.8.1
+	github.com/qiniu/go-sdk/v7 v7.9.7
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/viper v1.7.0
 	github.com/tidwall/gjson v1.6.5

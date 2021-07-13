@@ -6,13 +6,19 @@ According to [PicGo](https://github.com/Molunerfinn/PicGo)
 
 **GoPic is a terminal tool for quickly uploading images and getting URL links to images.**
 
- Support Image Gallery:
+Support Image Gallery:
 
-- github
-- gitee
-- smms
+[x] github
+[x] gitee
+[x] smms
+[x] qiniu
+[x] imgur
+[x] aliyun
+[x] upyun
+[x] tcyun
 
-All support image gallery is here, you can develop third-part plugins with [core](./core), welcome to give me PR.
+All support image gallery is here, you can develop third-part plugins with [core](./core/plugins/uploader), welcome to
+give me PR.
 
 ### Quick Start
 

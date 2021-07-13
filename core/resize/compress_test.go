@@ -3,7 +3,7 @@ package resize
 import (
 	"fmt"
 	"image"
-	"io/ioutil"
+	"io"
 	"os"
 	"testing"
 )
@@ -74,7 +74,8 @@ func TestCompress(t *testing.T) {
 				t.Errorf("Compress() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			err = ioutil.WriteFile(fmt.Sprintf("%d.jpg", i), got, os.ModePerm)
+			f, _ := os.OpenFile(fmt.Sprintf("%d.jpg", i), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+			_, err = io.Copy(f, got)
 			if err != nil {
 				t.Errorf("Write file error %v", err)
 			}
