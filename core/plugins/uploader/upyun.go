@@ -10,12 +10,12 @@ import (
 )
 
 type UpyunConfig struct {
-	Bucket   string `json:"bucket" yaml:"bucket"`
-	Operator string `json:"operator" yaml:"operator"`
-	Password string `json:"password" yaml:"password"`
-	Url      string `json:"url" yaml:"url"`
-	Options  string `json:"options" yaml:"options"`
-	Path     string `json:"path" yaml:"path"`
+	Bucket   string `json,yaml:"bucket"`
+	Operator string `json,yaml:"operator"`
+	Password string `json,yaml:"password"`
+	Url      string `json,yaml:"url"`
+	Options  string `json,yaml:"options"`
+	Path     string `json,yaml:"path"`
 }
 
 func (u *UpyunConfig) Name() string {

@@ -14,7 +14,7 @@ import (
 // SmmsConfig sm.ms options
 // api: https://doc.sm.ms/#api-Image-Upload
 type SmmsConfig struct {
-	Token string `json:"token"`
+	Token string `json,yaml:"token"`
 }
 
 func (s *SmmsConfig) Name() string {

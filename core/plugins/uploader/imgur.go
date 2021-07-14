@@ -14,8 +14,8 @@ import (
 )
 
 type ImgurConfig struct {
-	ClientId string `json:"clientId" yaml:"clientId"`
-	Proxy    string `json:"proxy" yaml:"proxy"`
+	ClientId string `json,yaml:"clientId"`
+	Proxy    string `json,yaml:"proxy"`
 }
 
 func (i *ImgurConfig) Name() string {

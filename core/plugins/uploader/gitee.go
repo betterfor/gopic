@@ -18,15 +18,15 @@ import (
 // GiteeConfig
 // api: https://gitee.com/api/v5/swagger#/postV5ReposOwnerRepoContentsPath
 type GiteeConfig struct {
-	RepoName       string `json:"repoName" yaml:"repoName"`
-	Branch         string `json:"branch" yaml:"branch"`
-	Path           string `json:"path" yaml:"path"`
-	Email          string `json:"email" yaml:"email"`
-	Password       string `json:"password" yaml:"password"`
-	ClientID       string `json:"clientId" yaml:"clientId"`
-	ClientSecret   string `json:"clientSecret" yaml:"clientSecret"`
-	AccessToken    string `json:"accessToken" yaml:"accessToken"`
-	EnableTimeFile string `json:"enableTimeFile" yaml:"enableTimeFile"` // use date path
+	RepoName       string `json,yaml:"repoName"`
+	Branch         string `json,yaml:"branch"`
+	Path           string `json,yaml:"path"`
+	Email          string `json,yaml:"email"`
+	Password       string `json,yaml:"password"`
+	ClientID       string `json,yaml:"clientId"`
+	ClientSecret   string `json,yaml:"clientSecret"`
+	AccessToken    string `json,yaml:"accessToken"`
+	EnableTimeFile string `json,yaml:"enableTimeFile"` // use date path
 }
 
 func (g *GiteeConfig) Name() string {

@@ -13,13 +13,13 @@ import (
 )
 
 type QiniuConfig struct {
-	AccessKey string `json:"accessKey"`
-	SecretKey string `json:"secretKey"`
-	Bucket    string `json:"bucket"`
-	Url       string `json:"url"`
-	Area      string `json:"area"`
-	Option    string `json:"option"`
-	Path      string `json:"path"`
+	AccessKey string `json,yaml:"accessKey"`
+	SecretKey string `json,yaml:"secretKey"`
+	Bucket    string `json,yaml:"bucket"`
+	Url       string `json,yaml:"url"`
+	Area      string `json,yaml:"area"`
+	Option    string `json,yaml:"option"`
+	Path      string `json,yaml:"path"`
 }
 
 func (q *QiniuConfig) Name() string {

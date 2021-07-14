@@ -14,12 +14,12 @@ import (
 )
 
 type AliyunConfig struct {
-	Bucket          string `json:"bucket" yaml:"bucket"`                   // 存储空间
-	Area            string `json:"area" yaml:"area"`                       // 存储区域
-	AccessKeyId     string `json:"accessKeyId" yaml:"accessKeyId"`         // key
-	AccessKeySecret string `json:"accessKeySecret" yaml:"accessKeySecret"` // secret
-	CustomUrl       string `json:"customUrl" yaml:"customUrl"`             // 自定义域名
-	Path            string `json:"path"`                                   // 存储路径
+	Bucket          string `json,yaml:"bucket"`          // 存储空间
+	Area            string `json,yaml:"area"`            // 存储区域
+	AccessKeyId     string `json,yaml:"accessKeyId"`     // key
+	AccessKeySecret string `json,yaml:"accessKeySecret"` // secret
+	CustomUrl       string `json,yaml:"customUrl"`       // 自定义域名
+	Path            string `json,yaml:"path"`            // 存储路径
 }
 
 func (a *AliyunConfig) Name() string {

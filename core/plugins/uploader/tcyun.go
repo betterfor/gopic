@@ -14,13 +14,13 @@ import (
 )
 
 type TcyunConfig struct {
-	SecretId  string `json:"secretId" yaml:"secretId"`
-	SecretKey string `json:"secretKey" yaml:"secretKey"`
-	Bucket    string `json:"bucket" yaml:"bucket"`
-	AppId     string `json:"appId" yaml:"appId"`
-	Area      string `json:"area" yaml:"area"`
-	Path      string `json:"path" yaml:"path"`
-	CustomUrl string `json:"customUrl" yaml:"customUrl"`
+	SecretId  string `json,yaml:"secretId"`
+	SecretKey string `json,yaml:"secretKey"`
+	Bucket    string `json,yaml:"bucket"`
+	AppId     string `json,yaml:"appId"`
+	Area      string `json,yaml:"area"`
+	Path      string `json,yaml:"path"`
+	CustomUrl string `json,yaml:"customUrl"`
 }
 
 func (t *TcyunConfig) Name() string {

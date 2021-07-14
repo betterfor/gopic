@@ -15,12 +15,12 @@ import (
 // GithubConfig github options
 // api: https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#create-or-update-file-contents
 type GithubConfig struct {
-	RepoName       string `json:"repoName" yaml:"repoName"`             // the name of warehouse, like: betterfor/gopic
-	Branch         string `json:"branch" yaml:"branch"`                 // project branch, default is master
-	Token          string `json:"token" yaml:"token"`                   // set github personal access tokens
-	Path           string `json:"path" yaml:"path"`                     // storage path in github, support variables ${time-format}, default is images
-	CustomUrl      string `json:"customUrl" yaml:"customUrl"`           // convert url to custom url
-	EnableTimeFile string `json:"enableTimeFile" yaml:"enableTimeFile"` // use date path
+	RepoName       string `json,yaml:"repoName"`       // the name of warehouse, like: betterfor/gopic
+	Branch         string `json,yaml:"branch"`         // project branch, default is master
+	Token          string `json,yaml:"token"`          // set github personal access tokens
+	Path           string `json,yaml:"path"`           // storage path in github, support variables ${time-format}, default is images
+	CustomUrl      string `json,yaml:"customUrl"`      // convert url to custom url
+	EnableTimeFile string `json,yaml:"enableTimeFile"` // use date path
 }
 
 func (g *GithubConfig) Name() string {
