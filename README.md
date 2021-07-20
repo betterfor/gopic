@@ -8,21 +8,21 @@ According to [PicGo](https://github.com/Molunerfinn/PicGo)
 
 Support Image Gallery:
 
--[x] github
+- [x] github
 
--[x] gitee
+- [x] gitee
 
--[x] smms
+- [x] smms
 
--[x] qiniu
+- [x] qiniu
 
--[x] imgur
+- [x] imgur
 
--[x] aliyun
+- [x] aliyun
 
--[x] upyun
+- [x] upyun
 
--[x] tcyun
+- [x] tcyun
 
 All support image gallery is here, you can develop third-part plugins with [core](./core/plugins/uploader), welcome to
 give me PR.
