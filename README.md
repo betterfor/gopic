@@ -9,12 +9,19 @@ According to [PicGo](https://github.com/Molunerfinn/PicGo)
 Support Image Gallery:
 
 [x] github
+
 [x] gitee
+
 [x] smms
+
 [x] qiniu
+
 [x] imgur
+
 [x] aliyun
+
 [x] upyun
+
 [x] tcyun
 
 All support image gallery is here, you can develop third-part plugins with [core](./core/plugins/uploader), welcome to

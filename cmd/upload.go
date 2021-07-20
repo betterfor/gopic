@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -110,9 +109,6 @@ func (u *upload) run(file string) {
 		fmt.Fprintf(u.out, "upload failed"+err.Error())
 		return
 	}
-
-	fn, err := os.Open(fileName)
-	ioutil.ReadAll(fn)
 
 	imgUrl := img.ImgUrl
 	if debug {
