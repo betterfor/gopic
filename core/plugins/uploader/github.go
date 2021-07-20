@@ -18,7 +18,7 @@ type GithubConfig struct {
 	RepoName       string `json,yaml:"repoName"`       // the name of warehouse, like: betterfor/gopic
 	Branch         string `json,yaml:"branch"`         // project branch, default is master
 	Token          string `json,yaml:"token"`          // set github personal access tokens
-	Path           string `json,yaml:"path"`           // storage path in github, support variables ${time-format}, default is images
+	Path           string `json,yaml:"path"`           // storage path in github, default is images
 	CustomUrl      string `json,yaml:"customUrl"`      // convert url to custom url
 	EnableTimeFile string `json,yaml:"enableTimeFile"` // use date path
 }

@@ -21,7 +21,7 @@ var rootCmd = &cobra.Command{
 	Use:   "gopic",
 	Short: "Manage picture to remote storage",
 	Long: `Gopic is a tool for uploading images.
-It's easily, quickly, conveniently and support github| ... now.
+It's easily, quickly, conveniently.
 After your uploading images, you can get a link to save in your blog|markdown|article...'`,
 	PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
 		return viper.WriteConfigAs(cfgFile)
